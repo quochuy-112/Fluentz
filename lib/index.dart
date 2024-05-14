@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'index_home.dart';
+import 'index_create_lesson.dart';
+import 'index_create_folder.dart';
 
 void main() {
   runApp(const Index());
@@ -70,7 +72,10 @@ class _IndexState extends State<Index> {
                               return [
                                 PopupMenuItem(
                                   onTap: () {
-                                    ;
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => IndexCreateLesson()));
                                   },
                                   child: Container(
                                     margin: const EdgeInsets.symmetric(vertical: 10),
@@ -99,7 +104,10 @@ class _IndexState extends State<Index> {
                                 ),
                                 PopupMenuItem(
                                   onTap: () {
-                                    ;
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => IndexCreateFolder()));
                                   },
                                   child: Container(
                                     margin: const EdgeInsets.symmetric(vertical: 10),

@@ -1,20 +1,37 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const IndexCreatLesson());
+  runApp(const IndexCreateLesson());
 }
 
-class IndexCreatLesson extends StatefulWidget {
-  const IndexCreatLesson({super.key});
+class IndexCreateLesson extends StatefulWidget {
+  const IndexCreateLesson({super.key});
 
   @override
-  State<IndexCreatLesson> createState() => _IndexCreatLessonState();
+  State<IndexCreateLesson> createState() => _IndexCreateLessonState();
 }
 
-class _IndexCreatLessonState extends State<IndexCreatLesson> {
-  String _selectedOption = 'Chọn ngôn ngữ';
+class _IndexCreateLessonState extends State<IndexCreateLesson> {
+  String _selectedOptionLanguage1 = 'Chọn ngôn ngữ';
+  String _selectedOptionLanguage2 = 'Chọn ngôn ngữ';
 
-  List<DropdownMenuItem<String>> dropdownItems = <String>[
+  final ScrollController _scrollController = ScrollController();
+
+  List<DropdownMenuItem<String>> dropdownItemsLanguage1 = <String>[
+    'Chọn ngôn ngữ',
+    'Vietnam',
+    'Laos',
+    'Cambodia',
+    'Thailand',
+    'Singapore'
+  ].map<DropdownMenuItem<String>>((String value) {
+    return DropdownMenuItem<String>(
+      value: value,
+      child: Text(value),
+    );
+  }).toList();
+
+  List<DropdownMenuItem<String>> dropdownItemsLanguage2 = <String>[
     'Chọn ngôn ngữ',
     'Vietnam',
     'Laos',
@@ -41,14 +58,18 @@ class _IndexCreatLessonState extends State<IndexCreatLesson> {
         background: Container(
           alignment: Alignment.centerRight,
           color: Colors.red,
-          child: const Icon(
-            Icons.delete,
-            color: Colors.white,
+          child: const Padding(
+            padding: EdgeInsets.only(right: 100),
+            child: Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
           ),
         ),
         onDismissed: (direction) {
           setState(() {
-            listItem.removeWhere((element) => element.key == Key(direction.index.toString()));
+            listItem.removeWhere(
+                (element) => element.key == Key(direction.index.toString()));
           });
         },
         child: Column(
@@ -109,182 +130,240 @@ class _IndexCreatLessonState extends State<IndexCreatLesson> {
     listItem.add(_buildItem());
   }
 
+  void _addItem() {
+    setState(() {
+      listItem.add(_buildItem());
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent + 100,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    });
+  }
+
+  void _onDoneTap() {
+    ;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        resizeToAvoidBottomInset: true,
         appBar: AppBar(
           backgroundColor: Colors.deepPurpleAccent,
           title: const Text(
             'Tạo học phần',
             style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white),
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+              color: Colors.white,
+            ),
           ),
           centerTitle: true,
-          leading: const Icon(
-            Icons.settings_outlined,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
             color: Colors.white,
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
           actions: [
             Container(
-                margin: const EdgeInsets.only(right: 16),
+              margin: const EdgeInsets.only(right: 16),
+              child: InkWell(
+                onTap: _onDoneTap,
                 child: const Text(
-                  'Xong',
+                  'Lưu',
                   style: TextStyle(fontSize: 18, color: Colors.white),
-                )),
+                ),
+              ),
+            ),
           ],
         ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  color: const Color.fromRGBO(240, 240, 240, 1.0),
-                  constraints: BoxConstraints(
-                      maxHeight: MediaQuery.of(context).size.height - 111.143),
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: Stack(
+            children: [
+              Container(
+                color: const Color.fromRGBO(240, 240, 240, 1.0),
+              ),
+              SafeArea(
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  controller: _scrollController,
                   child: Column(
                     children: [
                       Container(
-                        margin: const EdgeInsets.all(5),
-                        color: Colors.white,
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                                    child: const TextField(
-                                      decoration: InputDecoration(
-                                        hintText: 'Chủ đề, chương, đơn vị ...',
-                                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                                  child: const Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text('Tiêu đề'),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                                    child: const TextField(
-                                      decoration: InputDecoration(
-                                        hintText: 'Mô tả học phần ...',
-                                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.fromLTRB(5, 0, 0, 15),
-                                  child: const Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text('Mô tả'),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        color: Colors.white,
-                        margin: const EdgeInsets.all(5),
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: Column(
                           children: [
                             Container(
-                              margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                              child: DropdownButtonFormField<String>(
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                                value: _selectedOption,
-                                onChanged: (newValue) {
-                                  ;
-                                },
-                                items: dropdownItems,
-                                decoration: const InputDecoration(
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                              margin: const EdgeInsets.all(5),
+                              color: Colors.white,
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          margin: const EdgeInsets.fromLTRB(
+                                              5, 0, 5, 0),
+                                          child: const TextField(
+                                            decoration: InputDecoration(
+                                              hintText:
+                                                  'Chủ đề, chương, đơn vị ...',
+                                              floatingLabelBehavior:
+                                                  FloatingLabelBehavior.always,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                validator: (value) {
-                                  if (_selectedOption == dropdownItems.first.value) {
-                                    return 'Please choose a country!';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                              child: const Align(
-                                alignment: Alignment.topLeft,
-                                child: Text('Thuật ngữ'),
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                              child: DropdownButtonFormField<String>(
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                                value: _selectedOption,
-                                onChanged: (newValue) {
-                                  ;
-                                },
-                                items: dropdownItems,
-                                decoration: const InputDecoration(
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.fromLTRB(
+                                            5, 0, 0, 0),
+                                        child: const Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Text('Tiêu đề'),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                validator: (value) {
-                                  if (_selectedOption == dropdownItems.first.value) {
-                                    return 'Please choose a country!';
-                                  }
-                                  return null;
-                                },
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Container(
+                                          margin: const EdgeInsets.fromLTRB(
+                                              5, 0, 5, 0),
+                                          child: const TextField(
+                                            decoration: InputDecoration(
+                                              hintText: 'Mô tả học phần ...',
+                                              floatingLabelBehavior:
+                                                  FloatingLabelBehavior.always,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.fromLTRB(
+                                            5, 0, 0, 15),
+                                        child: const Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Text('Mô tả'),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ),
                             Container(
-                              margin: const EdgeInsets.fromLTRB(5, 0, 0, 15),
-                              child: const Align(
-                                alignment: Alignment.topLeft,
-                                child: Text('Định nghĩa'),
+                              color: Colors.white,
+                              margin: const EdgeInsets.all(5),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    margin:
+                                        const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                                    child: DropdownButtonFormField<String>(
+                                      autovalidateMode:
+                                          AutovalidateMode.onUserInteraction,
+                                      value: _selectedOptionLanguage1,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          _selectedOptionLanguage1 = newValue!;
+                                        });
+                                      },
+                                      items: dropdownItemsLanguage1,
+                                      validator: (value) {
+                                        if (_selectedOptionLanguage1 ==
+                                            dropdownItemsLanguage1
+                                                .first.value) {
+                                          return 'Please choose a language!';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  Container(
+                                    margin:
+                                        const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                    child: const Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text('Thuật ngữ'),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin:
+                                        const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                                    child: DropdownButtonFormField<String>(
+                                      autovalidateMode:
+                                          AutovalidateMode.onUserInteraction,
+                                      value: _selectedOptionLanguage2,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          _selectedOptionLanguage2 = newValue!;
+                                        });
+                                      },
+                                      items: dropdownItemsLanguage2,
+                                      validator: (value) {
+                                        if (_selectedOptionLanguage2 ==
+                                            dropdownItemsLanguage2
+                                                .first.value) {
+                                          return 'Please choose a language!';
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                  ),
+                                  Container(
+                                    margin:
+                                        const EdgeInsets.fromLTRB(5, 0, 0, 15),
+                                    child: const Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text('Định nghĩa'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            ...listItem,
+                            Container(
+                              margin: const EdgeInsets.symmetric(vertical: 10),
+                              child: ElevatedButton(
+                                onPressed: _addItem,
+                                style: const ButtonStyle(
+                                  backgroundColor: MaterialStatePropertyAll(
+                                      Colors.deepPurpleAccent),
+                                ),
+                                child: const Text('Thêm',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold)),
                               ),
                             ),
                           ],
-                        ),
-                      ),
-                      Container(
-                        height: 200,
-                        child: ListView.builder(
-                          itemCount: listItem.length,
-                          itemBuilder: (context, index) {
-                            return listItem[index];
-                          },
                         ),
                       ),
                     ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
